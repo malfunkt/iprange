@@ -54,6 +54,8 @@ const ipInitialStackSize = 16
 
 //line ip.y:88
 
+// ParseList takes a list of target specifications and returns a list of ranges,
+// even if the list contains a single element.
 func ParseList(in string) (AddressRangeList, error) {
 	lex := &ipLex{line: []byte(in)}
 	errCode := ipParse(lex)
@@ -63,6 +65,8 @@ func ParseList(in string) (AddressRangeList, error) {
 	return lex.output, nil
 }
 
+// Parse takes a single target specification and returns a range. It effectively calls ParseList
+// and returns the first result
 func Parse(in string) (*AddressRange, error) {
 	l, err := ParseList(in)
 	if err != nil {
