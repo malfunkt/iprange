@@ -2,6 +2,7 @@
 
 [![GoDoc](https://godoc.org/github.com/malfunkt/iprange?status.svg)](https://godoc.org/github.com/malfunkt/iprange)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+[![Build Status](https://travis-ci.org/malfunkt/iprange.svg?branch=master)](https://travis-ci.org/malfunkt/iprange)
 
 `iprange` is a library you can use to parse IPv4 addresses from a string in the `nmap` format.
 
