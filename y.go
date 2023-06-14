@@ -500,6 +500,9 @@ ipdefault:
 		//line ip.y:54
 		{
 			mask := net.CIDRMask(int(ipDollar[3].num), 32)
+			if mask == nil {
+				mask = net.IPv4Mask(0xff, 0xff, 0xff, 0xff)
+			}
 			min := ipDollar[1].addrRange.Min.Mask(mask)
 			maxInt := binary.BigEndian.Uint32([]byte(min)) +
 				0xffffffff -
