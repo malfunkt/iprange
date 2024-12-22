@@ -61,9 +61,19 @@ func TestCIDRAddress(t *testing.T) {
 	}
 
 	{
-		_, err := Parse("10.1.2.3/40")
-		assert.Error(t, err)
-		assert.ErrorContains(t, err, "invalid mask value")
+		ipRange, err := Parse("10.1.2.3/40")
+		assert.Nil(t, err)
+
+		assert.Equal(t, net.IPv4(10, 1, 2, 3).To4(), ipRange.Min)
+		assert.Equal(t, ipRange.Min, ipRange.Max)
+	}
+
+	{
+		ipRange, err := Parse("10.1.2.3/0")
+		assert.Nil(t, err)
+
+		assert.Equal(t, net.IPv4(0, 0, 0, 0).To4(), ipRange.Min)
+		assert.Equal(t, net.IPv4(255, 255, 255, 255).To4(), ipRange.Max)
 	}
 }
 

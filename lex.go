@@ -57,8 +57,8 @@ L:
 		log.Printf("badly formatted octet")
 		return eof
 	}
-	yylval.num = byte(octet)
-	return num
+	yylval.byteValue = byte(octet)
+	return NUM
 }
 
 func (ip *ipLex) next() rune {

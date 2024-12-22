@@ -26,23 +26,28 @@ type octetRange struct {
 	max byte
 }
 
-//line ip.y:26
+const (
+	ipV4MaskLength = 32
+	maxMaskValue   = ipV4MaskLength
+)
+
+//line ip.y:31
 type ipSymType struct {
 	yys       int
-	num       byte
+	byteValue byte
 	octRange  octetRange
 	addrRange AddressRange
 	result    AddressRangeList
 	ipMask    net.IPMask
 }
 
-const num = 57346
+const NUM = 57346
 
 var ipToknames = [...]string{
 	"$end",
 	"error",
 	"$unk",
-	"num",
+	"NUM",
 	"','",
 	"' '",
 	"'/'",
@@ -57,7 +62,7 @@ const ipEofCode = 1
 const ipErrCode = 2
 const ipInitialStackSize = 16
 
-//line ip.y:99
+//line ip.y:104
 
 // ParseList takes a list of target specifications and returns a list of ranges,
 // even if the list contains a single element.
@@ -484,21 +489,21 @@ ipdefault:
 
 	case 1:
 		ipDollar = ipS[ippt-1 : ippt+1]
-//line ip.y:43
+//line ip.y:48
 		{
 			ipVAL.result = append(ipVAL.result, ipDollar[1].addrRange)
 			iplex.(*ipLex).output = ipVAL.result
 		}
 	case 2:
 		ipDollar = ipS[ippt-3 : ippt+1]
-//line ip.y:48
+//line ip.y:53
 		{
 			ipVAL.result = append(ipDollar[1].result, ipDollar[3].addrRange)
 			iplex.(*ipLex).output = ipVAL.result
 		}
 	case 5:
 		ipDollar = ipS[ippt-3 : ippt+1]
-//line ip.y:56
+//line ip.y:61
 		{
 			mask := ipDollar[3].ipMask
 			min := ipDollar[1].addrRange.Min.Mask(mask)
@@ -516,13 +521,13 @@ ipdefault:
 		}
 	case 6:
 		ipDollar = ipS[ippt-1 : ippt+1]
-//line ip.y:72
+//line ip.y:77
 		{
 			ipVAL.addrRange = ipDollar[1].addrRange
 		}
 	case 7:
 		ipDollar = ipS[ippt-7 : ippt+1]
-//line ip.y:77
+//line ip.y:82
 		{
 			ipVAL.addrRange = AddressRange{
 				Min: net.IPv4(ipDollar[1].octRange.min, ipDollar[3].octRange.min, ipDollar[5].octRange.min, ipDollar[7].octRange.min).To4(),
@@ -531,37 +536,37 @@ ipdefault:
 		}
 	case 8:
 		ipDollar = ipS[ippt-1 : ippt+1]
-//line ip.y:84
+//line ip.y:89
 		{
-			ipVAL.octRange = octetRange{ipDollar[1].num, ipDollar[1].num}
+			ipVAL.octRange = octetRange{ipDollar[1].byteValue, ipDollar[1].byteValue}
 		}
 	case 9:
 		ipDollar = ipS[ippt-1 : ippt+1]
-//line ip.y:85
+//line ip.y:90
 		{
 			ipVAL.octRange = octetRange{0, 255}
 		}
 	case 10:
 		ipDollar = ipS[ippt-1 : ippt+1]
-//line ip.y:86
+//line ip.y:91
 		{
 			ipVAL.octRange = ipDollar[1].octRange
 		}
 	case 11:
 		ipDollar = ipS[ippt-3 : ippt+1]
-//line ip.y:88
+//line ip.y:93
 		{
-			ipVAL.octRange = octetRange{ipDollar[1].num, ipDollar[3].num}
+			ipVAL.octRange = octetRange{ipDollar[1].byteValue, ipDollar[3].byteValue}
 		}
 	case 12:
 		ipDollar = ipS[ippt-1 : ippt+1]
-//line ip.y:91
+//line ip.y:96
 		{
-			if ipDollar[1].num > 32 {
-				iplex.(*ipLex).Error("invalid mask value")
-				return 1
+			if ipDollar[1].byteValue > maxMaskValue {
+				ipVAL.ipMask = net.CIDRMask(maxMaskValue, ipV4MaskLength)
+				break
 			}
-			ipVAL.ipMask = net.CIDRMask(int(ipDollar[1].num), 32)
+			ipVAL.ipMask = net.CIDRMask(int(ipDollar[1].byteValue), ipV4MaskLength)
 		}
 	}
 	goto ipstack /* stack new state and value */

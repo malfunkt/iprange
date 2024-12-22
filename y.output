@@ -2,7 +2,7 @@
 state 0
 	$accept: .result $end 
 
-	num  shift 5
+	NUM  shift 5
 	'*'  shift 6
 	.  error
 
@@ -25,7 +25,7 @@ state 1
 state 2
 	result:  target.    (1)
 
-	.  reduce 1 (src line 42)
+	.  reduce 1 (src line 47)
 
 
 state 3
@@ -33,7 +33,7 @@ state 3
 	target:  address.    (6)
 
 	'/'  shift 10
-	.  reduce 6 (src line 71)
+	.  reduce 6 (src line 76)
 
 
 state 4
@@ -44,29 +44,29 @@ state 4
 
 
 state 5
-	term:  num.    (8)
-	octet_range:  num.'-' num 
+	term:  NUM.    (8)
+	octet_range:  NUM.'-' NUM 
 
 	'-'  shift 12
-	.  reduce 8 (src line 84)
+	.  reduce 8 (src line 89)
 
 
 state 6
 	term:  '*'.    (9)
 
-	.  reduce 9 (src line 85)
+	.  reduce 9 (src line 90)
 
 
 state 7
 	term:  octet_range.    (10)
 
-	.  reduce 10 (src line 86)
+	.  reduce 10 (src line 91)
 
 
 state 8
 	result:  result comma.target 
 
-	num  shift 5
+	NUM  shift 5
 	'*'  shift 6
 	.  error
 
@@ -80,13 +80,13 @@ state 9
 	comma:  ','.' ' 
 
 	' '  shift 14
-	.  reduce 3 (src line 53)
+	.  reduce 3 (src line 58)
 
 
 state 10
 	target:  address '/'.mask 
 
-	num  shift 16
+	NUM  shift 16
 	.  error
 
 	mask  goto 15
@@ -94,7 +94,7 @@ state 10
 state 11
 	address:  term '.'.term '.' term '.' term 
 
-	num  shift 5
+	NUM  shift 5
 	'*'  shift 6
 	.  error
 
@@ -102,34 +102,34 @@ state 11
 	octet_range  goto 7
 
 state 12
-	octet_range:  num '-'.num 
+	octet_range:  NUM '-'.NUM 
 
-	num  shift 18
+	NUM  shift 18
 	.  error
 
 
 state 13
 	result:  result comma target.    (2)
 
-	.  reduce 2 (src line 47)
+	.  reduce 2 (src line 52)
 
 
 state 14
 	comma:  ',' ' '.    (4)
 
-	.  reduce 4 (src line 53)
+	.  reduce 4 (src line 58)
 
 
 state 15
 	target:  address '/' mask.    (5)
 
-	.  reduce 5 (src line 55)
+	.  reduce 5 (src line 60)
 
 
 state 16
-	mask:  num.    (12)
+	mask:  NUM.    (12)
 
-	.  reduce 12 (src line 90)
+	.  reduce 12 (src line 95)
 
 
 state 17
@@ -140,15 +140,15 @@ state 17
 
 
 state 18
-	octet_range:  num '-' num.    (11)
+	octet_range:  NUM '-' NUM.    (11)
 
-	.  reduce 11 (src line 88)
+	.  reduce 11 (src line 93)
 
 
 state 19
 	address:  term '.' term '.'.term '.' term 
 
-	num  shift 5
+	NUM  shift 5
 	'*'  shift 6
 	.  error
 
@@ -165,7 +165,7 @@ state 20
 state 21
 	address:  term '.' term '.' term '.'.term 
 
-	num  shift 5
+	NUM  shift 5
 	'*'  shift 6
 	.  error
 
@@ -175,7 +175,7 @@ state 21
 state 22
 	address:  term '.' term '.' term '.' term.    (7)
 
-	.  reduce 7 (src line 76)
+	.  reduce 7 (src line 81)
 
 
 10 terminals, 8 nonterminals

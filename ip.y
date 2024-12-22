@@ -21,18 +21,23 @@ type octetRange struct {
     max byte
 }
 
+const (
+    ipV4MaskLength = 32
+    maxMaskValue   = ipV4MaskLength
+)
+
 %}
 
 %union {
-    num         byte
+    byteValue   byte
     octRange    octetRange
     addrRange   AddressRange
     result      AddressRangeList
     ipMask      net.IPMask
 }
 
-%token  <num> num
-%type   <ipMask> mask
+%token  <byteValue> NUM
+%type   <ipMask>    mask
 %type   <addrRange> address target
 %type   <octRange>  term octet_range
 %type   <result>    result
@@ -81,19 +86,19 @@ address:    term '.' term '.' term '.' term
                     }
                 }
 
-term:   num         { $$ = octetRange { $1, $1 } }
+term:   NUM         { $$ = octetRange { $1, $1 } }
     |   '*'         { $$ = octetRange { 0, 255 } }
     |   octet_range { $$ = $1 }
 
-octet_range:    num '-' num { $$ = octetRange { $1, $3 } }
+octet_range:    NUM '-' NUM { $$ = octetRange { $1, $3 } }
 
-mask: num
+mask: NUM
 	{
-	    if $1 > 32 {
-		iplex.(*ipLex).Error("invalid mask value")
-		return 1
+	    if $1 > maxMaskValue {
+		$$ = net.CIDRMask(maxMaskValue, ipV4MaskLength)
+		break
 	    }
-	    $$ = net.CIDRMask(int($1), 32)
+	    $$ = net.CIDRMask(int($1), ipV4MaskLength)
 	}
 
 %%
