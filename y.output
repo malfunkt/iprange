@@ -25,15 +25,15 @@ state 1
 state 2
 	result:  target.    (1)
 
-	.  reduce 1 (src line 40)
+	.  reduce 1 (src line 42)
 
 
 state 3
-	target:  address.'/' num 
+	target:  address.'/' mask 
 	target:  address.    (6)
 
 	'/'  shift 10
-	.  reduce 6 (src line 69)
+	.  reduce 6 (src line 71)
 
 
 state 4
@@ -48,19 +48,19 @@ state 5
 	octet_range:  num.'-' num 
 
 	'-'  shift 12
-	.  reduce 8 (src line 82)
+	.  reduce 8 (src line 84)
 
 
 state 6
 	term:  '*'.    (9)
 
-	.  reduce 9 (src line 83)
+	.  reduce 9 (src line 85)
 
 
 state 7
 	term:  octet_range.    (10)
 
-	.  reduce 10 (src line 84)
+	.  reduce 10 (src line 86)
 
 
 state 8
@@ -80,15 +80,16 @@ state 9
 	comma:  ','.' ' 
 
 	' '  shift 14
-	.  reduce 3 (src line 51)
+	.  reduce 3 (src line 53)
 
 
 state 10
-	target:  address '/'.num 
+	target:  address '/'.mask 
 
-	num  shift 15
+	num  shift 16
 	.  error
 
+	mask  goto 15
 
 state 11
 	address:  term '.'.term '.' term '.' term 
@@ -97,89 +98,95 @@ state 11
 	'*'  shift 6
 	.  error
 
-	term  goto 16
+	term  goto 17
 	octet_range  goto 7
 
 state 12
 	octet_range:  num '-'.num 
 
-	num  shift 17
+	num  shift 18
 	.  error
 
 
 state 13
 	result:  result comma target.    (2)
 
-	.  reduce 2 (src line 45)
+	.  reduce 2 (src line 47)
 
 
 state 14
 	comma:  ',' ' '.    (4)
 
-	.  reduce 4 (src line 51)
+	.  reduce 4 (src line 53)
 
 
 state 15
-	target:  address '/' num.    (5)
+	target:  address '/' mask.    (5)
 
-	.  reduce 5 (src line 53)
+	.  reduce 5 (src line 55)
 
 
 state 16
-	address:  term '.' term.'.' term '.' term 
+	mask:  num.    (12)
 
-	'.'  shift 18
-	.  error
+	.  reduce 12 (src line 90)
 
 
 state 17
-	octet_range:  num '-' num.    (11)
+	address:  term '.' term.'.' term '.' term 
 
-	.  reduce 11 (src line 86)
+	'.'  shift 19
+	.  error
 
 
 state 18
+	octet_range:  num '-' num.    (11)
+
+	.  reduce 11 (src line 88)
+
+
+state 19
 	address:  term '.' term '.'.term '.' term 
 
 	num  shift 5
 	'*'  shift 6
 	.  error
 
-	term  goto 19
+	term  goto 20
 	octet_range  goto 7
 
-state 19
+state 20
 	address:  term '.' term '.' term.'.' term 
 
-	'.'  shift 20
+	'.'  shift 21
 	.  error
 
 
-state 20
+state 21
 	address:  term '.' term '.' term '.'.term 
 
 	num  shift 5
 	'*'  shift 6
 	.  error
 
-	term  goto 21
+	term  goto 22
 	octet_range  goto 7
 
-state 21
+state 22
 	address:  term '.' term '.' term '.' term.    (7)
 
-	.  reduce 7 (src line 74)
+	.  reduce 7 (src line 76)
 
 
-10 terminals, 7 nonterminals
-12 grammar rules, 22/2000 states
+10 terminals, 8 nonterminals
+13 grammar rules, 23/16000 states
 0 shift/reduce, 0 reduce/reduce conflicts reported
-56 working sets used
-memory: parser 15/30000
+57 working sets used
+memory: parser 16/240000
 5 extra closures
 19 shift entries, 1 exceptions
-10 goto entries
+11 goto entries
 6 entries saved by goto default
-Optimizer space used: output 22/30000
-22 table entries, 1 zero
-maximum spread: 10, maximum offset: 20
+Optimizer space used: output 23/240000
+23 table entries, 1 zero
+maximum spread: 10, maximum offset: 21

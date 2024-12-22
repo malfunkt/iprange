@@ -28,9 +28,11 @@ type octetRange struct {
     octRange    octetRange
     addrRange   AddressRange
     result      AddressRangeList
+    ipMask      net.IPMask
 }
 
 %token  <num> num
+%type   <ipMask> mask
 %type   <addrRange> address target
 %type   <octRange>  term octet_range
 %type   <result>    result
@@ -50,9 +52,9 @@ result: target
 
 comma: ',' | ',' ' '
 
-target:     address '/' num
+target:     address '/' mask
                 {
-                    mask := net.CIDRMask(int($3), 32)
+		    mask := $3
                     min := $1.Min.Mask(mask)
                     maxInt := binary.BigEndian.Uint32([]byte(min)) +
                                 0xffffffff -
@@ -84,6 +86,15 @@ term:   num         { $$ = octetRange { $1, $1 } }
     |   octet_range { $$ = $1 }
 
 octet_range:    num '-' num { $$ = octetRange { $1, $3 } }
+
+mask: num
+	{
+	    if $1 > 32 {
+		iplex.(*ipLex).Error("invalid mask value")
+		return 1
+	    }
+	    $$ = net.CIDRMask(int($1), 32)
+	}
 
 %%
 

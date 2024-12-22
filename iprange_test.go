@@ -59,6 +59,12 @@ func TestCIDRAddress(t *testing.T) {
 		assert.Equal(t, net.IPv4(10, 1, 2, 3).To4(), ipRange.Min)
 		assert.Equal(t, ipRange.Min, ipRange.Max)
 	}
+
+	{
+		_, err := Parse("10.1.2.3/40")
+		assert.Error(t, err)
+		assert.ErrorContains(t, err, "invalid mask value")
+	}
 }
 
 func TestWildcardAddress(t *testing.T) {
